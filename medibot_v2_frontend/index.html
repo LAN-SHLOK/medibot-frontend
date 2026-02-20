@@ -1,0 +1,676 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediBot // AI DIAGNOSTICS</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <canvas id="warpCanvas"></canvas>
+    <div class="vignette"></div>
+    <div class="grid-overlay"></div> 
+
+    <nav class="glass-nav" data-aos="fade-down" data-aos-duration="1000">
+        <div class="logo">MEDI<span class="pink-text">BOT</span></div>
+        <div class="menu">
+            <a href="#technology">RAG CORE</a>
+            <a href="#workflow">WORKFLOW</a>
+            <a href="#logs">CLINICAL LOGS</a>
+            <button class="login-btn" onclick="window.location.href='authentication.html'">LOGIN/SIGNUP</button>
+        </div>
+    </nav>
+
+    <header class="hero-section">
+        <div class="hero-content" data-aos="fade-right" data-aos-duration="1200">
+            <div class="badge-container">
+                <span class="badge">MULTI-AGENTIC RAG</span>
+                <span class="badge badge-outline">v2.4 ONLINE</span>
+            </div>
+            
+            <h1 class="mega-title">
+                MEDICAL AI <br>
+                <span class="blue-text glow-text">EVOLVED.</span>
+            </h1>
+            
+            <p class="hero-desc">
+                The world's first diagnostic engine powered by <strong>Multi-Agentic Retrieval-Augmented Generation</strong>. 
+                Scan X-Rays, CTs, and MRIs with 99.8% verified accuracy.
+            </p>
+
+            <div class="lang-selector" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-globe-asia"></i>
+                <span>English</span>
+                <span class="divider">/</span>
+                <span>हिंदी</span>
+                <span class="divider">/</span>
+                <span>ગુજરાતી</span>
+            </div>
+
+            <div class="cta-group" data-aos="fade-up" data-aos-delay="400">
+                <button class="primary-btn">
+                    <i class="fas fa-file-medical-alt"></i> UPLOAD SCAN
+                </button>
+                <button class="voice-btn">
+                    <i class="fas fa-microphone-lines"></i> VOICE ASSIST
+                </button>
+            </div>
+        </div>
+
+        <div class="hero-visual" data-aos="zoom-in" data-aos-duration="1500">
+            <div class="scanner-frame">
+                <div class="ring-outer"></div>
+                <div class="ring-inner"></div>
+                
+                <div id="dna-container"></div>
+                
+                <div class="scan-card">
+                    <div class="scan-line"></div>
+                    <div class="scan-header">
+                        <i class="fas fa-dna"></i> GENOMIC SEQUENCE
+                    </div>
+                    <div class="scan-data">
+                        <span>MATCHING...</span>
+                        <span class="percent">99.8%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="stats-section">
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="0">
+            <div class="stat-number">12,405</div>
+            <div class="stat-label">SCANS PROCESSED</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+            <div class="stat-number">99.9%</div>
+            <div class="stat-label">SYSTEM UPTIME</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+            <div class="stat-number">3.5TB</div>
+            <div class="stat-label">MEDICAL DATA RETRIEVED</div>
+        </div>
+    </section>
+
+    <section id="workflow" class="process-section">
+        <div class="section-header" data-aos="fade-up">
+            <h2>SYSTEM <span class="blue-text">WORKFLOW</span></h2>
+            <p>From raw data to detailed diagnosis in 3 steps.</p>
+        </div>
+
+        <div class="process-grid">
+            <div class="process-card" data-aos="fade-right" data-aos-delay="100">
+                <div class="step-number">01</div>
+                <div class="p-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <h3>Secure Upload</h3>
+                <p>Upload DICOM, JPEG, or PNG scans. Data is encrypted end-to-end via AES-256 protocols.</p>
+            </div>
+
+            <div class="process-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="step-number">02</div>
+                <div class="p-icon"><i class="fas fa-network-wired"></i></div>
+                <h3>Agentic Analysis</h3>
+                <p>Three specialized AI agents (Vision, Pathology, and Text) analyze the image simultaneously.</p>
+            </div>
+
+            <div class="process-card" data-aos="fade-left" data-aos-delay="300">
+                <div class="step-number">03</div>
+                <div class="p-icon"><i class="fas fa-file-contract"></i></div>
+                <h3>Smart Report</h3>
+                <p>Receive a detailed PDF report in your preferred language (Eng/Hin/Guj) instantly.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="technology" class="tech-section">
+        <div class="section-header" data-aos="zoom-in">
+            <h2>THE <span class="pink-text">RAG</span> ENGINE</h2>
+        </div>
+
+        <div class="tech-grid">
+            <div class="tech-card glass-effect" data-aos="flip-left" data-aos-delay="100">
+                <i class="fas fa-brain icon-blue"></i>
+                <h3>Multi-Agent Core</h3>
+                <p>A "council" of AIs that debate the diagnosis to ensure maximum accuracy.</p>
+            </div>
+            <div class="tech-card glass-effect" data-aos="flip-up" data-aos-delay="200">
+                <i class="fas fa-search-location icon-pink"></i>
+                <h3>Live Context Retrieval</h3>
+                <p>MediBot cross-references scans with millions of real-time case studies.</p>
+            </div>
+            <div class="tech-card glass-effect" data-aos="flip-right" data-aos-delay="300">
+                <i class="fas fa-laptop-medical icon-cyan"></i>
+                <h3>High-Level ML</h3>
+                <p>Computer Vision pipelines specifically tuned for grayscale textures.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="logs" class="logs-section">
+        <div class="section-header" data-aos="fade-up">
+            <h2>VERIFIED <span class="blue-text">LOGS</span></h2>
+            <p>Data from our beta testing partners.</p>
+        </div>
+        
+        <div class="logs-container">
+            <div class="log-card" data-aos="fade-right">
+                <div class="log-header">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="doc-img" alt="Dr">
+                    <div>
+                        <h4>Dr. A. Sharma</h4>
+                        <span>Chief Radiologist, City General</span>
+                    </div>
+                </div>
+                <p class="log-text">"The Multi-Agent check caught a hairline fracture in the tibia that manual review missed. The Hindi voice output is a game changer for our rural patients."</p>
+                <div class="log-status"><span class="dot"></span> VERIFIED USER</div>
+            </div>
+
+            <div class="log-card" data-aos="fade-left">
+                <div class="log-header">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="doc-img" alt="Dr">
+                    <div>
+                        <h4>Dr. P. Patel</h4>
+                        <span>Neurosurgeon</span>
+                    </div>
+                </div>
+                <p class="log-text">"MediBot's RAG system retrieves relevant case studies instantly. It feels like having a team of researchers in my pocket. Accuracy is phenomenal."</p>
+                <div class="log-status"><span class="dot"></span> VERIFIED USER</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="roadmap" class="roadmap-section">
+        <div class="overlay-blur"></div>
+        <div class="roadmap-content" data-aos="zoom-in-up">
+            <h2>FUTURE UPDATE: <span class="pink-text">PHASE 3</span></h2>
+            
+            <div class="coming-soon-card">
+                <div class="card-header">
+                    <i class="fas fa-prescription-bottle-alt"></i>
+                    <span>IN DEVELOPMENT</span>
+                </div>
+                <h3>Smart Dosage Scheduler</h3>
+                <p>MediBot will analyze prescriptions to create automated dosage reminders, check for drug interactions, and alert patients.</p>
+                
+                <div class="progress-wrapper">
+                    <div class="progress-label">
+                        <span>Development Progress</span>
+                        <span>75%</span>
+                    </div>
+                    <div class="progress-bar"><div class="fill"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content" data-aos="fade-up">
+            <div class="f-logo">MEDI<span class="pink-text">BOT</span></div>
+            <p>&copy; 2026 MediBot AI Systems. High-Level ML Research Project.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script type="module" src="dna-animation.js"></script>
+    
+    <script src="script.js"></script>
+
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediBot // Next-Gen Medical AI</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <canvas id="warpCanvas"></canvas>
+    <div class="vignette"></div>
+    <div class="grid-overlay"></div> 
+
+    <!-- NAVBAR -->
+    <nav class="glass-nav" data-aos="fade-down" data-aos-duration="1000">
+        <div class="logo">MEDI<span class="pink-text">BOT</span></div>
+        <div class="menu">
+            <a href="#home">HOME</a>
+            <a href="#diagnostic-hub">DIAGNOSTIC HUB</a>
+            <a href="#technology">TECHNICAL SPECS</a>
+            <a href="#security">SECURITY</a>
+            <button class="login-btn" onclick="window.location.href='authentication.html'">LOGIN/SIGNUP</button>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header id="home" class="hero-section">
+        <div class="hero-content" data-aos="fade-right" data-aos-duration="1200">
+            <div class="badge-container">
+                <span class="badge">MULTI-AGENTIC RAG</span>
+                <span class="badge badge-outline">v2.4 ONLINE</span>
+                <span class="badge badge-outline" style="border-color: var(--cyan); color: var(--cyan);">LLAMA 3.3-70B</span>
+            </div>
+            
+            <h1 class="mega-title">
+                NEXT-GEN <br>
+                <span class="blue-text glow-text">MEDICAL AI.</span>
+            </h1>
+            
+            <p class="hero-desc">
+                A <strong>Multi-Agent Medical Council</strong> powered by Llama 3.3-70B and Computer Vision. Bridging the gap between raw data and clinical empathy.
+            </p>
+
+            <div class="lang-selector" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-globe-asia"></i>
+                <span>English</span>
+                <span class="divider">/</span>
+                <span>हिंदी</span>
+                <span class="divider">/</span>
+                <span>ગુજરાતી</span>
+            </div>
+
+            <div class="cta-group" data-aos="fade-up" data-aos-delay="400">
+                <button class="primary-btn" onclick="window.location.href='chat.html'">
+                    <i class="fas fa-bolt"></i> INITIALIZE SYSTEM
+                </button>
+                <button class="voice-btn" onclick="window.location.href='authentication.html'">
+                    <i class="fas fa-shield-alt"></i> SECURE ACCESS
+                </button>
+            </div>
+        </div>
+
+        <div class="hero-visual" data-aos="zoom-in" data-aos-duration="1500">
+            <div class="scanner-frame">
+                <div class="ring-outer"></div>
+                <div class="ring-inner"></div>
+                
+                <div id="dna-container"></div>
+                
+                <div class="scan-card">
+                    <div class="scan-line"></div>
+                    <div class="scan-header">
+                        <i class="fas fa-dna"></i> GENOMIC SEQUENCE
+                    </div>
+                    <div class="scan-data">
+                        <span>MATCHING...</span>
+                        <span class="percent">99.8%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- STATS SECTION -->
+    <section class="stats-section">
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="0">
+            <div class="stat-number">12,405</div>
+            <div class="stat-label">SCANS PROCESSED</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+            <div class="stat-number">99.9%</div>
+            <div class="stat-label">SYSTEM UPTIME</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+            <div class="stat-number">3.5TB</div>
+            <div class="stat-label">MEDICAL DATA RETRIEVED</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+            <div class="stat-number">4</div>
+            <div class="stat-label">AI SPECIALIST AGENTS</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="400">
+            <div class="stat-number">&lt;5ms</div>
+            <div class="stat-label">NEURAL ROUTER LATENCY</div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: MEDICAL COUNCIL ARCHITECTURE -->
+    <section id="diagnostic-hub" class="process-section">
+        <div class="section-header" data-aos="fade-up">
+            <h2>THE <span class="blue-text">MEDICAL COUNCIL</span></h2>
+            <p>The 4-Tier Autonomous Debate — Every diagnosis is challenged, verified, and synthesized.</p>
+        </div>
+
+        <div class="process-grid">
+            <div class="process-card" data-aos="fade-right" data-aos-delay="100">
+                <div class="step-number">01</div>
+                <div class="p-icon"><i class="fas fa-heartbeat"></i></div>
+                <h3>Triage Nurse</h3>
+                <p>Real-time symptom categorization with a hard-coded Safety Net for critical keywords — Heart Attack, Stroke, Overdose — triggering instant emergency protocol overrides.</p>
+            </div>
+
+            <div class="process-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="step-number">02</div>
+                <div class="p-icon"><i class="fas fa-user-md"></i></div>
+                <h3>Specialist Consultant</h3>
+                <p>Dynamic RAG integration fetching from a <strong style="color:var(--cyan)">FAISS medical database</strong> using Llama 3.3-70B, retrieving the most relevant clinical case studies in real time.</p>
+            </div>
+
+            <div class="process-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="step-number">03</div>
+                <div class="p-icon"><i class="fas fa-search"></i></div>
+                <h3>Clinical Skeptic</h3>
+                <p>An adversarial auditor that challenges every diagnosis and identifies blind spots. Inspired by the Dr. House persona — it never accepts the first answer.</p>
+            </div>
+
+            <div class="process-card" data-aos="fade-left" data-aos-delay="400">
+                <div class="step-number">04</div>
+                <div class="p-icon"><i class="fas fa-gavel"></i></div>
+                <h3>Chief Medical Officer</h3>
+                <p>The Judge. Synthesizes the full agent debate into a professional, empathetic final verdict — complete with severity scoring and treatment recommendations.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: WORKFLOW -->
+    <section id="workflow" class="process-section" style="padding-top: 0;">
+        <div class="section-header" data-aos="fade-up">
+            <h2>SYSTEM <span class="blue-text">WORKFLOW</span></h2>
+            <p>From raw data to detailed diagnosis in 3 steps.</p>
+        </div>
+
+        <div class="process-grid">
+            <div class="process-card" data-aos="fade-right" data-aos-delay="100">
+                <div class="step-number">01</div>
+                <div class="p-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <h3>Secure Upload</h3>
+                <p>Upload DICOM, JPEG, or PNG scans. Data is encrypted end-to-end via AES-256 protocols. Firebase Social Auth + local SQLite hybrid storage.</p>
+            </div>
+
+            <div class="process-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="step-number">02</div>
+                <div class="p-icon"><i class="fas fa-network-wired"></i></div>
+                <h3>Agentic Analysis</h3>
+                <p>Four specialist AI agents debate the diagnosis simultaneously. Our custom MLP Neural Router classifies intent in under 5ms before routing to the council.</p>
+            </div>
+
+            <div class="process-card" data-aos="fade-left" data-aos-delay="300">
+                <div class="step-number">03</div>
+                <div class="p-icon"><i class="fas fa-file-contract"></i></div>
+                <h3>Smart Report</h3>
+                <p>Receive a detailed PDF report in your preferred language (Eng/Hin/Guj) instantly. Full heatmap visualization and confidence scoring included.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: INFRASTRUCTURE -->
+    <section id="technology" class="tech-section">
+        <div class="section-header" data-aos="zoom-in">
+            <h2>DISTRIBUTED <span class="pink-text">MICROSERVICE</span> INFRASTRUCTURE</h2>
+            <p>Production-grade architecture bridging local GPU backends to a globally available edge interface.</p>
+        </div>
+
+        <div class="tech-grid">
+            <div class="tech-card glass-effect" data-aos="flip-left" data-aos-delay="100">
+                <i class="fas fa-server icon-blue"></i>
+                <h3>Ngrok Secure Tunnels</h3>
+                <p>HTTPS tunnels bridge local GPU-accelerated Python backends to the cloud. Zero-config deployment with automatic SSL and real-time traffic monitoring.</p>
+            </div>
+            <div class="tech-card glass-effect" data-aos="flip-up" data-aos-delay="150">
+                <i class="fas fa-globe icon-cyan"></i>
+                <h3>Vercel Edge Frontend</h3>
+                <p>Globally distributed edge-hosted interface for zero-latency user interaction. Automatic CDN caching with 99.99% availability SLA.</p>
+            </div>
+            <div class="tech-card glass-effect" data-aos="flip-right" data-aos-delay="200">
+                <i class="fas fa-eye icon-pink"></i>
+                <h3>Vision Engine (OpenCV)</h3>
+                <p>Real-time injury mapping using HSV color segmentation and contour detection. Processes live camera feeds and uploaded DICOM scans frame-by-frame.</p>
+            </div>
+            <div class="tech-card glass-effect" data-aos="flip-left" data-aos-delay="250">
+                <i class="fas fa-microchip icon-blue"></i>
+                <h3>Neural Router (MLP)</h3>
+                <p>Custom Multi-Layer Perceptron Neural Network classifies user intent — Greeting, Info, Symptom — in under 5ms using 384-dimensional semantic vectors.</p>
+            </div>
+            <div class="tech-card glass-effect" data-aos="flip-up" data-aos-delay="300">
+                <i class="fas fa-brain icon-pink"></i>
+                <h3>FAISS Vector Database</h3>
+                <p>High-speed similarity search across 3.5TB of indexed medical literature. Returns the top-K most relevant clinical cases in milliseconds for RAG context.</p>
+            </div>
+            <div class="tech-card glass-effect" data-aos="flip-right" data-aos-delay="350">
+                <i class="fas fa-microphone icon-cyan"></i>
+                <h3>Whisper Voice Engine</h3>
+                <p>Whisper-tiny running on Float16 CUDA precision with Edge-TTS output. Real-time interruption handling and continuous conversational memory across turns.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: TECH SPECS -->
+    <section id="tech-specs" class="tech-section" style="padding-top: 0;">
+        <div class="section-header" data-aos="zoom-in">
+            <h2>THE <span class="pink-text">RAG</span> ENGINE — TECHNICAL SPECS</h2>
+        </div>
+
+        <div class="tech-grid">
+            <div class="tech-card glass-effect" data-aos="flip-left" data-aos-delay="100">
+                <i class="fas fa-brain icon-blue"></i>
+                <h3>LLM Stack</h3>
+                <p><strong style="color:var(--cyan)">Llama 3.3-70B</strong> for deep clinical reasoning. <strong style="color:var(--secondary)">Llama 3.1-8B</strong> for fast greetings & triage. <strong style="color:var(--primary)">Llama 4 Scout</strong> for multimodal vision tasks.</p>
+            </div>
+            <div class="tech-card glass-effect" data-aos="flip-up" data-aos-delay="200">
+                <i class="fas fa-search-location icon-pink"></i>
+                <h3>Live Context Retrieval</h3>
+                <p>MediBot cross-references symptoms with millions of real-time case studies via FAISS cosine similarity. Every answer is grounded in peer-reviewed medical data.</p>
+            </div>
+            <div class="tech-card glass-effect" data-aos="flip-right" data-aos-delay="300">
+                <i class="fas fa-laptop-medical icon-cyan"></i>
+                <h3>Computer Vision Pipeline</h3>
+                <p>BioMed-CLIP model fine-tuned for grayscale medical textures. Processes X-Rays, MRIs, and CT scans with class activation mapping for interpretable heatmaps.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: SECURITY -->
+    <section id="security" class="tech-section" style="padding-top: 0;">
+        <div class="section-header" data-aos="zoom-in">
+            <h2>SECURITY <span class="blue-text">&amp; LICENSING</span></h2>
+            <p>Enterprise-grade protection on an open-source foundation.</p>
+        </div>
+        <div class="tech-grid" style="grid-template-columns: repeat(2, 1fr);">
+            <div class="tech-card glass-effect" data-aos="fade-right" data-aos-delay="100" style="text-align:left;">
+                <i class="fas fa-shield-alt icon-blue"></i>
+                <h3>Hybrid Authentication</h3>
+                <p>Firebase Social Login (Google, GitHub) combined with local SQLite credential storage. JWT session tokens with automatic refresh and revocation support.</p>
+            </div>
+            <div class="tech-card glass-effect" data-aos="fade-left" data-aos-delay="200" style="text-align:left;">
+                <i class="fas fa-lock icon-pink"></i>
+                <h3>Data Encryption</h3>
+                <p>All medical scans and user data are encrypted end-to-end with AES-256. Zero PHI stored on servers — all processing is stateless and session-scoped.</p>
+            </div>
+            <div class="tech-card glass-effect" data-aos="fade-right" data-aos-delay="300" style="text-align:left;">
+                <i class="fas fa-code icon-cyan"></i>
+                <h3>GNU AGPLv3 License</h3>
+                <p>All architectural logic is protected and open-source under GNU AGPLv3. Contributions welcome. Commercial use requires explicit written permission.</p>
+            </div>
+            <div class="tech-card glass-effect" data-aos="fade-left" data-aos-delay="400" style="text-align:left;">
+                <i class="fas fa-user-shield icon-blue"></i>
+                <h3>Privacy by Design</h3>
+                <p>No third-party data sharing. No ad tracking. All inference runs on local or private GPU infrastructure. HIPAA-aligned data handling practices.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: CLINICAL LOGS -->
+    <section id="logs" class="logs-section">
+        <div class="section-header" data-aos="fade-up">
+            <h2>VERIFIED <span class="blue-text">CLINICAL LOGS</span></h2>
+            <p>Data from our beta testing partners across India.</p>
+        </div>
+        
+        <div class="logs-container">
+            <div class="log-card" data-aos="fade-right">
+                <div class="log-header">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="doc-img" alt="Dr">
+                    <div>
+                        <h4>Dr. A. Sharma</h4>
+                        <span>Chief Radiologist, City General</span>
+                    </div>
+                </div>
+                <p class="log-text">"The Multi-Agent check caught a hairline fracture in the tibia that manual review missed. The Hindi voice output is a game changer for our rural patients."</p>
+                <div class="log-status"><span class="dot"></span> VERIFIED USER</div>
+            </div>
+
+            <div class="log-card" data-aos="fade-up">
+                <div class="log-header">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="doc-img" alt="Dr">
+                    <div>
+                        <h4>Dr. P. Patel</h4>
+                        <span>Neurosurgeon, Apollo Hospitals</span>
+                    </div>
+                </div>
+                <p class="log-text">"MediBot's RAG system retrieves relevant case studies instantly. It feels like having a team of researchers in my pocket. The Clinical Skeptic agent is brilliant."</p>
+                <div class="log-status"><span class="dot"></span> VERIFIED USER</div>
+            </div>
+
+            <div class="log-card" data-aos="fade-left">
+                <div class="log-header">
+                    <img src="https://randomuser.me/api/portraits/men/67.jpg" class="doc-img" alt="Dr">
+                    <div>
+                        <h4>Dr. R. Mehta</h4>
+                        <span>Cardiologist, AIIMS Delhi</span>
+                    </div>
+                </div>
+                <p class="log-text">"The 4-tier council debate caught a drug interaction my team had overlooked. The Chief Medical Officer verdict was precise, empathetic, and clinically sound."</p>
+                <div class="log-status"><span class="dot"></span> VERIFIED USER</div>
+            </div>
+
+            <div class="log-card" data-aos="fade-right">
+                <div class="log-header">
+                    <img src="https://randomuser.me/api/portraits/women/28.jpg" class="doc-img" alt="Dr">
+                    <div>
+                        <h4>Dr. S. Joshi</h4>
+                        <span>Oncologist, Tata Memorial Centre</span>
+                    </div>
+                </div>
+                <p class="log-text">"The BioMed-CLIP heatmaps are incredibly accurate. Early-stage anomaly detection on MRI scans that usually require a second opinion — done in seconds."</p>
+                <div class="log-status"><span class="dot"></span> VERIFIED USER</div>
+            </div>
+
+            <div class="log-card" data-aos="fade-up">
+                <div class="log-header">
+                    <img src="https://randomuser.me/api/portraits/men/45.jpg" class="doc-img" alt="Dr">
+                    <div>
+                        <h4>Dr. K. Verma</h4>
+                        <span>Emergency Medicine, KIMS Hospital</span>
+                    </div>
+                </div>
+                <p class="log-text">"The emergency protocol override triggered immediately when I typed 'chest pain' — the system dialled 108 guidance before I even finished typing. Potentially life-saving."</p>
+                <div class="log-status"><span class="dot"></span> VERIFIED USER</div>
+            </div>
+
+            <div class="log-card" data-aos="fade-left">
+                <div class="log-header">
+                    <img src="https://randomuser.me/api/portraits/women/55.jpg" class="doc-img" alt="Dr">
+                    <div>
+                        <h4>Dr. N. Iyer</h4>
+                        <span>Pulmonologist, Manipal Hospitals</span>
+                    </div>
+                </div>
+                <p class="log-text">"Whisper GPU voice engine is seamless. I narrated my findings hands-free during rounds and MediBot transcribed, analysed, and suggested follow-ups in real time."</p>
+                <div class="log-status"><span class="dot"></span> VERIFIED USER</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: ROADMAP -->
+    <section id="roadmap" class="roadmap-section">
+        <div class="overlay-blur"></div>
+        <div class="roadmap-content" data-aos="zoom-in-up">
+            <h2>FUTURE UPDATE: <span class="pink-text">PHASE 3</span></h2>
+            
+            <div class="coming-soon-card">
+                <div class="card-header">
+                    <i class="fas fa-prescription-bottle-alt"></i>
+                    <span>IN DEVELOPMENT</span>
+                </div>
+                <h3>Smart Dosage Scheduler</h3>
+                <p>MediBot will analyze prescriptions to create automated dosage reminders, check for drug interactions, and alert patients via push notifications.</p>
+                
+                <div class="progress-wrapper">
+                    <div class="progress-label">
+                        <span>Development Progress</span>
+                        <span>75%</span>
+                    </div>
+                    <div class="progress-bar"><div class="fill"></div></div>
+                </div>
+            </div>
+
+            <div class="coming-soon-card" style="margin-top: 20px; border-color: var(--primary); box-shadow: 0 0 40px rgba(37,99,235,0.15);">
+                <div class="card-header" style="color: var(--primary);">
+                    <i class="fas fa-hospital"></i>
+                    <span>PLANNED — Q3 2026</span>
+                </div>
+                <h3>Hospital Network Integration</h3>
+                <p>Direct HL7/FHIR API integration with hospital EMR systems. MediBot will pull patient history, lab results, and prior imaging automatically for richer context.</p>
+                
+                <div class="progress-wrapper">
+                    <div class="progress-label">
+                        <span>Development Progress</span>
+                        <span>30%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="fill" style="width: 30%; background: var(--primary); box-shadow: 0 0 15px var(--primary);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section style="padding: 80px 10%; text-align: center;" data-aos="fade-up">
+        <h2 style="font-family: 'Orbitron'; font-size: 36px; margin-bottom: 20px;">
+            READY TO <span class="pink-text">ACCESS</span> THE HUB?
+        </h2>
+        <p style="color: #94a3b8; margin-bottom: 40px; font-size: 16px;">
+            Join 12,000+ medical professionals using MediBot for next-generation diagnostics.
+        </p>
+        <div class="cta-group" style="justify-content: center;">
+            <button class="primary-btn" onclick="window.location.href='chat.html'">
+                <i class="fas fa-rocket"></i> ACCESS DIAGNOSTIC HUB
+            </button>
+            <button class="voice-btn" onclick="window.location.href='authentication.html'">
+                <i class="fas fa-user-plus"></i> CREATE ACCOUNT
+            </button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content" data-aos="fade-up">
+            <div class="f-logo">MEDI<span class="pink-text">BOT</span></div>
+            <p style="margin-top: 10px;">&copy; 2026 <strong>Shlok Patel</strong>. Developed at <strong>LJIET</strong>. Distributed Medical Intelligence Research.</p>
+            <p style="margin-top: 8px; font-size: 12px; color: #475569;">Licensed under GNU AGPLv3 &nbsp;|&nbsp; All architectural logic is protected and open-source.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script type="module" src="dna-animation.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>

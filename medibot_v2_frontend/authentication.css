@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap');
+
+:root {
+    --primary: #2563eb;  /* Blue (Login) */
+    --secondary: #db2777; /* Pink (Signup) */
+    --glass: rgba(15, 23, 42, 0.6); 
+    --bg-dark: #020617;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: var(--bg-dark);
+    height: 100vh; 
+    overflow: hidden;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    font-family: 'Roboto', sans-serif; 
+    color: #fff;
+    /* Hide default cursor for custom cursor experience */
+    cursor: none;
+}
+/* --- NATIVE CYBER CURSOR (Same as Landing Page) --- */
+
+/* Default State: Thin Cyan Arrow */
+html, body {
+    /* The SVG is embedded directly for zero-latency performance */
+    cursor: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 2L9 19L11.5 11.5L19 9L2 2Z' fill='%23020617' stroke='%2306b6d4' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E"), auto;
+}
+
+/* Pointer State: Thin Pink Arrow (Hovering Links/Buttons) */
+a, 
+button, 
+input, 
+textarea,
+span[onclick],
+i[onclick],
+.social-orbit i,
+.orbit-nav span,
+.core-btn {
+    cursor: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 2L9 19L11.5 11.5L19 9L2 2Z' fill='%23020617' stroke='%23db2777' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E"), pointer !important;
+}
+/* 1. Force the custom pink cursor on inputs and text-related fields */
+input, 
+textarea, 
+input::placeholder, 
+[contenteditable="true"] {
+    cursor: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 2L9 19L11.5 11.5L19 9L2 2Z' fill='%23020617' stroke='%23db2777' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E"), text !important;
+}
+
+/* 2. Ensure the cursor remains visible when the input is focused (clicked) */
+input:focus {
+    cursor: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 2L9 19L11.5 11.5L19 9L2 2Z' fill='%23020617' stroke='%23db2777' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E"), text !important;
+}
+
+/* 3. Global fix for Chrome/Edge text selection bug */
+* {
+    caret-color: var(--primary); /* Keeps the typing blinker blue while cursor is pink */
+}
+
+/* Ensure all child elements inside interactive containers inherit this cursor */
+button *, a *, .social-orbit * {
+    cursor: inherit;
+}
+/* --- CUSTOM CYBER CURSOR --- */
+.cursor-dot {
+    width: 5px;
+    height: 5px;
+    background-color: var(--primary);
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    z-index: 500;
+    pointer-events: none;
+    transition: width 0.2s, height 0.2s, background-color 0.2s;
+}
+
+.cursor-outline {
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--primary);
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    z-index: 500;
+    pointer-events: none;
+    transition: width 0.2s, height 0.2s, border-color 0.2s;
+}
+
+/* Hover State for Cursor */
+body.hovering .cursor-dot {
+    background-color: var(--secondary);
+    width: 8px;
+    height: 8px;
+}
+body.hovering .cursor-outline {
+    border-color: var(--secondary);
+    width: 50px;
+    height: 50px;
+}
+
+
+/* --- BACKGROUNDS --- */
+#warpCanvas { position: fixed; inset: 0; z-index: -2; }
+.vignette {
+    position: fixed; inset: 0;
+    background: radial-gradient(circle, transparent 30%, #020617 90%);
+    z-index: -1; pointer-events: none;
+}
+
+/* --- THE PORTAL CONTAINER --- */
+.portal-container {
+    position: relative;
+    width: 90vw;
+    max-width: 500px; 
+    aspect-ratio: 1/1;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+}
+
+/* RINGS */
+.ring {
+    position: absolute; border-radius: 50%;
+    border: 2px solid transparent;
+    transition: all 0.5s ease;
+}
+
+.outer-ring {
+    width: 100%; height: 100%;
+    border-top: 2px solid var(--primary);
+    border-bottom: 2px solid var(--secondary);
+    box-shadow: 0 0 30px var(--primary), inset 0 0 30px rgba(0,0,0,0.8);
+    animation: spin 10s linear infinite;
+}
+
+.middle-ring {
+    width: 85%; height: 85%;
+    border: 1px dashed rgba(255,255,255,0.2);
+    animation: spinReverse 20s linear infinite;
+}
+
+.inner-ring {
+    width: 70%; height: 70%;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.1), rgba(2, 6, 23, 0.9));
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--primary);
+    box-shadow: inset 0 0 50px rgba(37, 99, 235, 0.2);
+    z-index: 0;
+}
+
+/* --- CONTENT AREA --- */
+.core-content {
+    position: relative; z-index: 10;
+    text-align: center; width: 65%;
+    height: 65%; display: flex; justify-content: center; align-items: center;
+}
+
+.auth-module {
+    position: absolute; width: 100%;
+    display: flex; flex-direction: column; align-items: center;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.active-module { opacity: 1; transform: scale(1) rotate(0deg); pointer-events: all; }
+.hidden-module { opacity: 0; transform: scale(0) rotate(180deg); pointer-events: none; filter: blur(20px); }
+
+/* UI ELEMENTS */
+.core-icon { font-size: 30px; color: var(--primary); margin-bottom: 10px; filter: drop-shadow(0 0 10px var(--primary)); }
+.holo-title { font-family: 'Orbitron'; font-size: 1.2rem; letter-spacing: 2px; color: #fff; margin-bottom: 20px; text-shadow: 0 0 10px var(--primary); }
+
+.arc-input { margin-bottom: 10px; width: 100%; position: relative; }
+.arc-input input {
+    width: 100%; padding: 12px 20px; background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 25px;
+    color: #fff; text-align: center; font-size: 14px;
+    outline: none; transition: 0.3s;
+}
+
+.arc-input input:focus {
+    border-color: var(--primary); 
+    box-shadow: 0 0 15px var(--primary);
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.core-btn {
+    margin-top: 15px; padding: 12px 30px; border-radius: 30px;
+    background: transparent; border: 2px solid var(--primary);
+    color: var(--primary); font-family: 'Orbitron'; font-weight: bold; font-size: 11px;
+    transition: 0.3s; text-transform: uppercase; letter-spacing: 2px;
+}
+.core-btn:hover { background: var(--primary); color: #fff; box-shadow: 0 0 30px var(--primary); }
+
+.orbit-nav {
+    margin-top: 20px; width: 100%;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.orbit-nav span {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 2px;
+    transition: 0.3s; color: #94a3b8; padding: 5px;
+}
+.orbit-nav span:hover { color: #fff; text-shadow: 0 0 10px var(--primary); }
+
+.social-orbit { margin-top: 15px; display: flex; gap: 20px; }
+.social-orbit i { color: #94a3b8; font-size: 20px; transition: 0.3s; }
+.social-orbit i:hover { color: var(--primary); transform: scale(1.2); }
+
+/* --- ANIMATIONS --- */
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes spinReverse { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
+
+/* --- PINK SHIFT FOR SIGNUP --- */
+.portal-container.mode-signup .outer-ring { border-top: 2px solid var(--secondary); box-shadow: 0 0 30px var(--secondary); }
+.portal-container.mode-signup .inner-ring { border-color: var(--secondary); box-shadow: inset 0 0 50px rgba(219, 39, 119, 0.2); }
+.portal-container.mode-signup .core-icon { color: var(--secondary); filter: drop-shadow(0 0 10px var(--secondary)); }
+.portal-container.mode-signup .holo-title { text-shadow: 0 0 10px var(--secondary); }
+.portal-container.mode-signup .core-btn { border-color: var(--secondary); color: var(--secondary); }
+.portal-container.mode-signup .core-btn:hover { background: var(--secondary); color: #fff; box-shadow: 0 0 30px var(--secondary); }
+
+/* --- MODALS --- */
+.hud-modal.hidden { display: none; }
+.hud-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+.hud-glass { background: #0f172a; border: 1px solid var(--primary); padding: 30px; border-radius: 20px; text-align: center; width: 90%; max-width: 350px; box-shadow: 0 0 50px rgba(37, 99, 235, 0.2); }
+.alert-glass { border-color: var(--secondary); box-shadow: 0 0 50px rgba(219, 39, 119, 0.2); }
+
+/* --- RESPONSIVE FIXES --- */
+@media (max-width: 480px) {
+    .portal-container { width: 95vw; }
+    .holo-title { font-size: 1rem; }
+    .core-content { width: 75%; height: 75%; }
+}
+.portal-container.mode-signup .orbit-nav span { font-size: 9px; }
+.portal-container.mode-signup .social-orbit i { font-size: 18px; }      

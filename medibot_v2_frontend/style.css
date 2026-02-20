@@ -1,0 +1,254 @@
+:root {
+    --primary: #2563eb;   /* Electric Blue */
+    --secondary: #db2777; /* Neon Pink */
+    --cyan: #06b6d4;      /* Cyber Cyan */
+    --bg-dark: #020617;   /* Deep Space */
+    --glass: rgba(15, 23, 42, 0.6);
+    --border: rgba(255, 255, 255, 0.1);
+}
+
+/* --- 1. CUSTOM CURSOR (New: Thin, SVG, Fast) --- */
+
+/* Default State: Thin Cyan Arrow */
+body {
+    cursor: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 2L9 19L11.5 11.5L19 9L2 2Z' fill='%23020617' stroke='%2306b6d4' stroke-width='1' stroke-linejoin='round'/%3E%3C/svg%3E"), auto;
+}
+
+/* Pointer State: Thin Pink Arrow (Hovering Links/Buttons) */
+a, button, input, .process-card, .tech-card, .log-card {
+    cursor: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 2L9 19L11.5 11.5L19 9L2 2Z' fill='%23020617' stroke='%23db2777' stroke-width='1' stroke-linejoin='round'/%3E%3C/svg%3E"), pointer;
+}
+
+/* --- 2. CUSTOM SCROLLBAR (Sleek & Thin) --- */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #020617; 
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--primary), var(--secondary)); 
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary); 
+}
+
+/* --- 3. GLOBAL STYLES --- */
+* { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+
+body {
+    background: var(--bg-dark);
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+#warpCanvas { position: fixed; inset: 0; z-index: -2; }
+.vignette {
+    position: fixed; inset: 0; z-index: -1;
+    background: radial-gradient(circle at center, transparent 0%, #020617 95%);
+    pointer-events: none;
+}
+.grid-overlay {
+    position: fixed; inset: 0; z-index: -1;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px; pointer-events: none;
+}
+
+/* --- 4. NAVBAR --- */
+.glass-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 50px; position: fixed; top: 0; width: 100%; z-index: 100;
+    backdrop-filter: blur(15px); border-bottom: 1px solid var(--border);
+    background: rgba(2, 6, 23, 0.7);
+}
+.logo { font-family: 'Orbitron'; font-weight: 900; font-size: 24px; letter-spacing: 2px; }
+.pink-text { color: var(--secondary); text-shadow: 0 0 10px var(--secondary); }
+.blue-text { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+.glow-text { text-shadow: 0 0 20px var(--primary); }
+
+.menu a {
+    color: #94a3b8; text-decoration: none; margin-right: 30px;
+    font-size: 12px; font-family: 'Orbitron'; letter-spacing: 1px; transition: 0.3s;
+}
+.menu a:hover { color: #fff; text-shadow: 0 0 8px #fff; }
+.login-btn {
+    padding: 10px 25px; background: transparent;
+    border: 1px solid var(--primary); color: var(--primary);
+    border-radius: 4px; font-family: 'Orbitron'; font-size: 11px;
+    transition: 0.3s;
+}
+.login-btn:hover { background: var(--primary); color: #fff; box-shadow: 0 0 15px var(--primary); }
+
+/* --- 5. HERO SECTION --- */
+.hero-section {
+    min-height: 100vh; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 10%; padding-top: 60px;
+}
+.hero-content { width: 50%; z-index: 10; }
+
+.badge-container { margin-bottom: 20px; display: flex; gap: 10px; }
+.badge {
+    padding: 5px 12px; background: var(--primary); font-family: 'Orbitron';
+    font-size: 10px; border-radius: 20px; color: #fff; box-shadow: 0 0 10px var(--primary);
+}
+.badge-outline { background: transparent; border: 1px solid var(--secondary); color: var(--secondary); }
+
+.mega-title { font-family: 'Orbitron'; font-size: 64px; line-height: 1.1; margin-bottom: 25px; }
+.hero-desc { color: #cbd5e1; font-size: 18px; line-height: 1.6; max-width: 550px; margin-bottom: 35px; }
+
+.lang-selector {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 10px 20px; background: rgba(255,255,255,0.03);
+    border-radius: 30px; margin-bottom: 35px; border: 1px solid var(--border);
+    font-family: 'Orbitron'; font-size: 12px; color: #94a3b8;
+}
+.lang-selector i { color: var(--cyan); }
+
+.cta-group { display: flex; gap: 20px; }
+.primary-btn {
+    padding: 16px 32px; background: var(--primary); border: none; color: white;
+    font-family: 'Orbitron'; border-radius: 6px; transition: 0.3s;
+    font-weight: bold; display: flex; gap: 10px; align-items: center;
+}
+.primary-btn:hover { transform: translateY(-3px); box-shadow: 0 0 30px var(--primary); }
+.voice-btn {
+    padding: 16px 32px; background: transparent; border: 1px solid var(--border); color: #fff;
+    font-family: 'Orbitron'; border-radius: 6px; transition: 0.3s;
+    display: flex; gap: 10px; align-items: center;
+}
+.voice-btn:hover { border-color: var(--secondary); color: var(--secondary); box-shadow: 0 0 20px var(--secondary); }
+
+/* --- 6. 3D VISUAL AREA --- */
+.hero-visual { width: 45%; height: 500px; display: flex; justify-content: center; align-items: center; position: relative; }
+.scanner-frame { width: 400px; height: 400px; position: relative; display: flex; justify-content: center; align-items: center; }
+
+#dna-container {
+    width: 300px; height: 300px;
+    z-index: 5;
+}
+
+.ring-outer {
+    position: absolute; width: 100%; height: 100%; border-radius: 50%;
+    border: 1px dashed var(--secondary); opacity: 0.4; animation: spin 25s linear infinite;
+}
+.ring-inner {
+    position: absolute; width: 75%; height: 75%; border-radius: 50%;
+    border-top: 2px solid var(--primary); border-bottom: 2px solid var(--primary);
+    animation: spinReverse 15s linear infinite; box-shadow: 0 0 25px rgba(37,99,235,0.3);
+}
+
+.scan-card {
+    position: absolute; bottom: -40px; right: -20px;
+    width: 180px; padding: 15px; background: rgba(2,6,23,0.9);
+    border: 1px solid var(--cyan); backdrop-filter: blur(10px);
+    z-index: 10; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.scan-line {
+    position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+    background: var(--cyan); box-shadow: 0 0 8px var(--cyan);
+    animation: scan 3s ease-in-out infinite;
+}
+.scan-header { font-family: 'Orbitron'; font-size: 10px; color: var(--cyan); margin-bottom: 5px; }
+.scan-data { display: flex; justify-content: space-between; align-items: center; font-family: 'Orbitron'; font-size: 10px; }
+.percent { font-size: 16px; color: #fff; font-weight: bold; }
+
+/* --- 7. STATS SECTION --- */
+.stats-section {
+    display: flex; justify-content: space-around; align-items: center;
+    background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+    padding: 40px 10%; margin-top: -50px; position: relative; z-index: 20; 
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+}
+.stat-item { text-align: center; }
+.stat-number { font-family: 'Orbitron'; font-size: 32px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--cyan); margin-bottom: 5px; }
+.stat-label { font-size: 10px; color: #94a3b8; letter-spacing: 2px; }
+.stat-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.2); }
+
+/* --- 8. WORKFLOW (PROCESS) --- */
+.process-section { padding: 100px 10%; position: relative; }
+.section-header { text-align: center; margin-bottom: 60px; }
+.section-header h2 { font-family: 'Orbitron'; font-size: 40px; margin-bottom: 15px; }
+.section-header p { color: #94a3b8; font-size: 16px; }
+
+.process-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+.process-card {
+    background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+    padding: 40px 30px; border-radius: 15px; position: relative; transition: 0.4s;
+}
+.process-card:hover { transform: translateY(-10px); background: rgba(255,255,255,0.05); border-color: var(--primary); }
+.step-number {
+    position: absolute; top: 20px; right: 20px; font-family: 'Orbitron';
+    font-size: 40px; font-weight: 900; opacity: 0.1; color: #fff;
+}
+.p-icon { font-size: 32px; color: var(--primary); margin-bottom: 20px; }
+.process-card h3 { font-family: 'Orbitron'; margin-bottom: 15px; font-size: 18px; }
+.process-card p { color: #cbd5e1; font-size: 14px; line-height: 1.6; }
+
+/* --- 9. TECH SPECS --- */
+.tech-section { padding: 80px 10%; text-align: center; }
+.tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 50px; }
+.tech-card {
+    padding: 40px; border-radius: 12px; border: 1px solid var(--border);
+    background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(2,6,23,0.5));
+    transition: 0.4s;
+}
+.tech-card:hover { transform: scale(1.05); border-color: var(--secondary); box-shadow: 0 0 30px rgba(219,39,119,0.2); }
+.tech-card i { font-size: 40px; margin-bottom: 20px; display: block; }
+.icon-blue { color: var(--primary); } 
+.icon-pink { color: var(--secondary); } 
+.icon-cyan { color: var(--cyan); }
+
+/* --- 10. CLINICAL LOGS (TESTIMONIALS) --- */
+.logs-section { padding: 80px 10%; }
+.logs-container { display: flex; gap: 30px; flex-wrap: wrap; }
+.log-card { 
+    flex: 1; min-width: 300px; background: rgba(15, 23, 42, 0.6); 
+    border: 1px solid var(--border); padding: 30px; border-radius: 10px; position: relative; 
+    transition: 0.3s;
+}
+.log-card:hover { border-color: var(--cyan); }
+.log-card:before { content: '"'; position: absolute; top: 20px; right: 20px; font-family: 'Orbitron'; font-size: 60px; color: var(--primary); opacity: 0.2; }
+.log-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+.doc-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--primary); }
+.log-header h4 { font-family: 'Orbitron'; font-size: 14px; color: #fff; }
+.log-header span { font-size: 12px; color: #94a3b8; }
+.log-text { color: #cbd5e1; font-size: 14px; line-height: 1.6; margin-bottom: 20px; font-style: italic; }
+.log-status { font-size: 10px; color: var(--cyan); font-family: 'Orbitron'; display: flex; align-items: center; gap: 5px; }
+.dot { width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 5px var(--cyan); }
+
+/* --- 11. ROADMAP --- */
+.roadmap-section { padding: 100px 10%; text-align: center; }
+.coming-soon-card {
+    max-width: 600px; margin: 40px auto; text-align: left;
+    background: rgba(0,0,0,0.6); border: 2px solid var(--secondary);
+    padding: 40px; border-radius: 20px; box-shadow: 0 0 40px rgba(219, 39, 119, 0.15);
+}
+.card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; color: var(--secondary); font-family: 'Orbitron'; }
+.card-header i { font-size: 24px; }
+.progress-wrapper { margin-top: 30px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px; color: #94a3b8; }
+.progress-bar { width: 100%; height: 8px; background: #1e293b; border-radius: 4px; overflow: hidden; }
+.fill { width: 75%; height: 100%; background: var(--secondary); box-shadow: 0 0 15px var(--secondary); }
+
+/* --- 12. FOOTER --- */
+footer { padding: 50px; text-align: center; border-top: 1px solid var(--border); background: #020617; color: #64748b; }
+
+/* --- 13. ANIMATIONS --- */
+@keyframes spin { 100% { transform: rotate(360deg); } }
+@keyframes spinReverse { 100% { transform: rotate(-360deg); } }
+@keyframes scan { 0%, 100% { top: 0; opacity: 0; } 50% { opacity: 1; } }
+
+/* --- 14. RESPONSIVE --- */
+@media (max-width: 900px) {
+    .hero-section { flex-direction: column; text-align: center; padding-top: 100px; }
+    .hero-content, .hero-visual { width: 100%; }
+    .hero-visual { height: 400px; margin-top: 50px; }
+    .process-grid, .tech-grid, .logs-container { grid-template-columns: 1fr; flex-direction: column; }
+    .mega-title { font-size: 42px; }
+    .stats-section { flex-direction: column; gap: 20px; }
+    .stat-divider { width: 40px; height: 1px; }
+    .cta-group { justify-content: center; }
+}

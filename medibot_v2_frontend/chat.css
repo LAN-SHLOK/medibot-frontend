@@ -1,0 +1,456 @@
+:root {
+    --primary: #2563eb;
+    --secondary: #db2777;
+    --cyan: #06b6d4;
+    --dark: #020617;
+}
+
+body {
+    background-color: var(--dark);
+    /* Prevent "pull-to-refresh" on mobile to keep app-like feel */
+    overscroll-behavior: none;
+    /* Use dynamic viewport height for mobile browsers */
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+/* --- RESPONSIVE CURSORS --- */
+/* Only show custom cursors on devices with a mouse (hover capability) */
+@media (hover: hover) and (pointer: fine) {
+    body {
+        cursor: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 2L9 19L11.5 11.5L19 9L2 2Z' fill='%23020617' stroke='%2306b6d4' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E"), auto;
+    }
+
+    a, button, input, .cursor-pointer {
+        cursor: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 2L9 19L11.5 11.5L19 9L2 2Z' fill='%23020617' stroke='%23db2777' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E"), pointer;
+    }
+}
+
+/* --- INVISIBLE SCROLLBAR --- */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* --- BACKGROUNDS --- */
+.warp-stars {
+    position: fixed; inset: 0; z-index: -3;
+    background: radial-gradient(circle at center, transparent 0%, #020617 100%),
+                url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='200' cy='200' r='1' fill='white' opacity='0.5'/%3E%3Ccircle cx='100' cy='100' r='1' fill='white' opacity='0.3'/%3E%3Ccircle cx='300' cy='300' r='1' fill='white' opacity='0.3'/%3E%3C/svg%3E");
+    background-size: 400px 400px;
+    animation: warp-speed 20s linear infinite;
+    opacity: 0.6;
+}
+
+.cyber-grid-3d {
+    position: fixed; inset: 0; z-index: -2;
+    transform: perspective(800px) rotateX(60deg) translateY(100px) scale(2);
+    background-image: 
+        linear-gradient(0deg, transparent 24%, rgba(37, 99, 235, 0.1) 25%, rgba(37, 99, 235, 0.1) 26%, transparent 27%, transparent 74%, rgba(219, 39, 119, 0.1) 75%, rgba(219, 39, 119, 0.1) 76%, transparent 77%, transparent), 
+        linear-gradient(90deg, transparent 24%, rgba(37, 99, 235, 0.1) 25%, rgba(37, 99, 235, 0.1) 26%, transparent 27%, transparent 74%, rgba(219, 39, 119, 0.1) 75%, rgba(219, 39, 119, 0.1) 76%, transparent 77%, transparent);
+    background-size: 80px 80px;
+    animation: floor-scroll 4s linear infinite;
+    mask-image: linear-gradient(to top, black 20%, transparent 70%);
+    pointer-events: none; /* Ensure clicks pass through on mobile */
+}
+
+/* --- MOBILE SPECIFIC BACKGROUND ADJUSTMENTS --- */
+@media (max-width: 768px) {
+    .cyber-grid-3d {
+        /* Reduce grid scale on mobile to prevent visual clutter */
+        background-size: 50px 50px; 
+        transform: perspective(600px) rotateX(60deg) translateY(50px) scale(1.5);
+    }
+    .warp-stars {
+        /* Smaller star pattern for small screens */
+        background-size: 250px 250px;
+    }
+}
+
+.vignette {
+    position: fixed; inset: 0; z-index: -1;
+    background: radial-gradient(circle at center, transparent 40%, #020617 100%);
+    pointer-events: none;
+}
+
+.bg-scan-grid {
+    background-image: linear-gradient(#2563eb 1px, transparent 1px), linear-gradient(90deg, #2563eb 1px, transparent 1px);
+    background-size: 12px 12px;
+}
+
+/* --- COMPONENTS --- */
+.glass-panel {
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px); /* Safari support */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.gradient-border {
+    position: relative;
+    background: #020617;
+    border-radius: 12px;
+}
+.gradient-border::before {
+    content: ""; position: absolute; inset: -1px; z-index: -1; border-radius: 13px;
+    background: linear-gradient(45deg, #06b6d4, #db2777, #2563eb);
+    opacity: 0.8; filter: blur(1px);
+}
+
+/* --- TRANSITIONS --- */
+.pupil { transition: transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94); transform-box: fill-box; transform-origin: center; }
+#mouthLine, #hatGroup, #botContainer, #eyeLeft, #eyeRight, #voiceBars { transition: all 0.3s ease; }
+
+/* --- ANIMATIONS --- */
+@keyframes shine { 100% { transform: translateX(100%); } }
+.animate-shine { animation: shine 1.5s infinite; }
+
+@keyframes grid-scroll { 0% { background-position: 0 0; } 100% { background-position: 12px 12px; } }
+.animate-grid-scroll { animation: grid-scroll 2s linear infinite; }
+
+@keyframes floor-scroll { from { background-position-y: 0; } to { background-position-y: 80px; } }
+@keyframes warp-speed { from { transform: scale(1); } to { transform: scale(2); opacity: 0; } }
+
+@keyframes fade-in-up { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
+.animate-fade-in-up { animation: fade-in-up 0.4s ease-out forwards; }
+
+@keyframes scanBar { 0% { width: 0%; left: 0; opacity: 0; } 50% { width: 100%; left: 0; opacity: 1; } 100% { width: 0%; right: 0; opacity: 0; left: auto; } }
+.animate-scan-bar { animation: scanBar 2s ease-in-out infinite; }
+
+@keyframes pulse-slow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
+.animate-pulse-slow { animation: pulse-slow 3s infinite; }
+
+@keyframes happy-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.animate-happy-bounce { animation: happy-bounce 0.6s ease-in-out infinite; } 
+
+@keyframes success-ring { 0% { transform: scale(0.8); opacity: 0.8; border-color: #22c55e; } 100% { transform: scale(1.5); opacity: 0; } }
+.animate-success-ring { animation: success-ring 1s ease-out forwards; }
+
+/* --- EQUALIZER ANIMATION (Talking) --- */
+@keyframes barBounce { 
+    0%, 100% { transform: scaleY(0.4); } 
+    50% { transform: scaleY(1.2); } 
+}
+
+.animate-bar-1 { animation: barBounce 0.5s infinite ease-in-out; }
+.animate-bar-2 { animation: barBounce 0.7s infinite ease-in-out 0.1s; }
+.animate-bar-3 { animation: barBounce 0.9s infinite ease-in-out 0.2s; }
+
+/* --- AUTOFILL FIX --- */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: #e2e8f0 !important;
+    caret-color: white;
+}
+#chatInput { background-color: transparent !important; }
+
+/* --- RESPONSIVE HELPER CLASSES (For older devices) --- */
+@media (max-width: 640px) {
+    /* Ensure inputs don't zoom on focus on iOS */
+    input[type="text"], input[type="email"], input[type="password"] {
+        font-size: 16px !important; 
+    }
+}
+
+/* Camera Button Hover Effect (Optional, matches others) */
+#cameraBtn:hover i {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+/* Ensure font-awesome icons are centered */
+.fas {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+ .ar-mesh {
+        background-image: 
+            linear-gradient(rgba(6, 182, 212, 0.2) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(6, 182, 212, 0.2) 1px, transparent 1px);
+        background-size: 40px 40px;
+        perspective: 1000px;
+        transform: rotateX(10deg);
+        box-shadow: inset 0 0 100px rgba(6, 182, 212, 0.3);
+    }
+    .ar-reticle {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 200px; height: 200px;
+        border: 2px solid rgba(6, 182, 212, 0.6);
+        border-radius: 10px;
+    }
+    .ar-reticle::before, .ar-reticle::after {
+        content: ''; position: absolute; width: 20px; height: 20px;
+        border-color: #06b6d4; border-style: solid;
+    }
+    .ar-reticle::before { top: -2px; left: -2px; border-width: 4px 0 0 4px; }
+    .ar-reticle::after { bottom: -2px; right: -2px; border-width: 0 4px 4px 0; }
+
+    /* --- THINKING PANEL STYLING --- */
+
+/* The rotating blue arc from your screenshot */
+.thinking-loader {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.thinking-loader::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid transparent;
+    border-top-color: #06b6d4; /* Cyan Arc */
+    border-radius: 50%;
+    animation: rotate-arc 1.2s linear infinite;
+}
+
+@keyframes rotate-arc {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Sparkle Icon Color */
+.fa-sparkles, .fa-wand-magic-sparkles {
+    color: #3b82f6; /* Blue Sparkle */
+    filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5));
+}
+
+/* Agent Thought Slide-in */
+.agent-entry {
+    border-left: 2px solid rgba(6, 182, 212, 0.2);
+    padding-left: 12px;
+    margin-bottom: 16px;
+    opacity: 0;
+    transform: translateX(-5px);
+    transition: all 0.5s ease-out;
+}
+
+.agent-entry.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* =========================================
+   1. CORE THEME & VARIABLES
+   ========================================= */
+:root {
+    --cyber-primary: #2563eb;
+    --cyber-secondary: #db2777;
+    --cyber-cyan: #06b6d4;
+    --cyber-dark: #020617;
+    --cyber-danger: #ef4444;
+    --cyber-warning: #f97316;
+    --cyber-success: #22c55e;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--cyber-dark);
+    color: #e2e8f0;
+    overflow: hidden;
+}
+
+/* =========================================
+   2. BACKGROUND & LAYOUT
+   ========================================= */
+.vignette {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle, transparent 20%, rgba(2, 6, 23, 0.8) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.cyber-grid-3d {
+    position: fixed;
+    inset: 0;
+    background-image: linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    transform: perspective(500px) rotateX(60deg);
+    transform-origin: top;
+    height: 200vh;
+    z-index: 0;
+    mask-image: linear-gradient(to bottom, transparent, black);
+}
+
+/* =========================================
+   3. GLASSMORPHISM & UI COMPONENTS
+   ========================================= */
+.glass-panel {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gradient-border {
+    background: linear-gradient(45deg, var(--cyber-primary), var(--cyber-secondary));
+    padding: 1px;
+    border-radius: 0.75rem;
+}
+
+/* =========================================
+   4. BOT EMOTION & ANIMATIONS
+   ========================================= */
+@keyframes floatSubtle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+#botContainer.animate-happy-bounce {
+    animation: happy-bounce 0.4s ease-in-out infinite;
+}
+
+@keyframes happy-bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05) translateY(-5px); }
+}
+
+.animate-success-ring {
+    animation: ring-pulse 1.5s ease-out forwards;
+}
+
+@keyframes ring-pulse {
+    0% { transform: scale(0.8); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* =========================================
+   5. VISION SCANNER RESULT (DIAGNOSTIC CARD)
+   ========================================= */
+
+/* The Floating Tier Badge */
+.tier-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    text-shadow: 0 0 10px currentColor;
+    border: 1px solid currentColor;
+}
+
+/* Heatmap Container */
+.heatmap-frame {
+    border: 1px solid rgba(6, 182, 212, 0.4);
+    box-shadow: inset 0 0 15px rgba(6, 182, 212, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.heatmap-label {
+    background: rgba(0, 0, 0, 0.8);
+    color: var(--cyber-cyan);
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 0.1em;
+}
+
+/* Confidence Progress Bar */
+.confidence-bar-bg {
+    background: rgba(255, 255, 255, 0.05);
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+/* Critical Alert Styling */
+.text-red-500 {
+    color: #ef4444;
+    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.6));
+    animation: siren-flicker 1s ease-in-out infinite;
+}
+
+@keyframes siren-flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+/* =========================================
+   6. CONSULTATION NEXUS (THINKING UI)
+   ========================================= */
+
+#thinkingWrapper {
+    margin-bottom: 1.5rem;
+    perspective: 1000px;
+}
+
+.thinking-loader {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(6, 182, 212, 0.1);
+    border-top: 2px solid #06b6d4;
+    border-radius: 50%;
+    filter: drop-shadow(0 0 5px #06b6d4);
+    animation: spin-nexus 0.8s linear infinite;
+}
+
+@keyframes spin-nexus {
+    to { transform: rotate(360deg); }
+}
+
+#agentDiscussion {
+    scrollbar-width: none;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(15,23,42,0.6));
+}
+
+.agent-thought {
+    position: relative;
+    padding-left: 1.5rem;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    margin-left: 0.5rem;
+    animation: slideInAgent 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Specialist Vertical Bar Colors */
+.agent-thought:has(.text-pink-500) { border-left-color: #db2777; } 
+.agent-thought:has(.text-cyan-400) { border-left-color: #06b6d4; } 
+.agent-thought:has(.text-orange-400) { border-left-color: #f97316; } 
+.agent-thought:has(.text-green-400) { border-left-color: #22c55e; } 
+
+@keyframes slideInAgent {
+    from { opacity: 0; transform: translateX(-15px); filter: blur(4px); }
+    to { opacity: 1; transform: translateX(0); filter: blur(0); }
+}
+
+#thinkingArrow { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* =========================================
+   7. UTILITIES
+   ========================================= */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.animate-fade-in-up {
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shine {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
+}
+.group-hover\:animate-shine:hover {
+    animation: shine 1.5s infinite;
+}
+/* Add this to your style.css for a better look */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #06b6d4; /* Cyan-500 */
+    border-radius: 10px;
+}
