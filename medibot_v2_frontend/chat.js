@@ -19,13 +19,13 @@ setInterval(() => {
 
 // 🟢 SECURE: Firebase keys are now pulled from the environment
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId: import.meta.env.VITE_FIREBASE_APP_ID,
-    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+    apiKey: "AIzaSyDPEywFgii0vVWl-xt8qZve9pOqHUxsbeQ",
+    authDomain: "medibot-73b45.firebaseapp.com",
+    projectId: "medibot-73b45",
+    storageBucket: "medibot-73b45.firebasestorage.app",
+    messagingSenderId: "385608781776",
+    appId: "1:385608781776:web:9c9588d8d3f9029cb6b3d5",
+    measurementId: "G-7K9JLKZNT9"
 };
 
 if (typeof firebase !== 'undefined' && !firebase.apps.length) {
