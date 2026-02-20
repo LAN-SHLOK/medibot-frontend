@@ -4,8 +4,8 @@
 let lastUserSymptom = "";
 let lastVisionContext = ""; // 🟢 Stores the rich JSON context of the last scan
 let currentPlayingAudio = null; // 🟢 Global variable to track active audio // Stores the current medical topic
-const BACKEND_BRAIN = "https://vdgho-2409-40c1-5b-3921-f9fb-112c-32d8-8545.a.free.pinggy.link";       // Chat, Voice & Camera (Backend 2)
-const BACKEND_VISION = "https://overvaluably-illustratable-nga.ngrok-free.dev";  
+const BACKEND_BRAIN = " http://bkwrk-152-58-34-43.a.free.pinggy.link";       // Chat, Voice & Camera (Backend 2)
+const BACKEND_VISION = " https://overvaluably-illustratable-nga.ngrok-free.dev";  
      // Heavy Document Analysis (Backend 1)
      // 🟢 Tracks if the user used the mic or the keyboard
 
