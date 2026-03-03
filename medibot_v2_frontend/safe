@@ -1,0 +1,602 @@
+// // // Initial State
+// // setMode('neutral');
+// /* =========================================
+//    1. FIREBASE CONFIGURATION (PRESERVED)
+//    ========================================= */
+// const firebaseConfig = {
+//     apiKey: "AIzaSyDPEywFgii0vVWl-xt8qZve9pOqHUxsbeQ",
+//     authDomain: "medibot-73b45.firebaseapp.com",
+//     projectId: "medibot-73b45",
+//     storageBucket: "medibot-73b45.firebasestorage.app",
+//     messagingSenderId: "385608781776",
+//     appId: "1:385608781776:web:9c9588d8d3f9029cb6b3d5",
+//     measurementId: "G-7K9JLKZNT9"
+// };
+
+// if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+//     firebase.initializeApp(firebaseConfig);
+// }
+// const auth = firebase.auth();
+
+// /* =========================================
+//    2. WARP SPEED BACKGROUND (PRESERVED)
+//    ========================================= */
+// const canvas = document.getElementById('warpCanvas');
+// if (canvas) {
+//     const ctx = canvas.getContext('2d');
+//     let stars = [];
+//     const numStars = 500;
+//     let speed = 2;
+
+//     function resizeCanvas() {
+//         canvas.width = window.innerWidth;
+//         canvas.height = window.innerHeight;
+//     }
+//     window.addEventListener('resize', resizeCanvas);
+//     resizeCanvas();
+
+//     class Star {
+//         constructor() {
+//             this.x = Math.random() * canvas.width - canvas.width / 2;
+//             this.y = Math.random() * canvas.height - canvas.height / 2;
+//             this.z = Math.random() * canvas.width;
+//         }
+//         update() {
+//             this.z -= speed;
+//             if (this.z <= 0) {
+//                 this.z = canvas.width;
+//                 this.x = Math.random() * canvas.width - canvas.width / 2;
+//                 this.y = Math.random() * canvas.height - canvas.height / 2;
+//             }
+//         }
+//         draw() {
+//             let x = (this.x / this.z) * canvas.width + canvas.width / 2;
+//             let y = (this.y / this.z) * canvas.height + canvas.height / 2;
+//             let radius = Math.abs((1 - this.z / canvas.width) * 3);
+//             if (x > 0 && x < canvas.width && y > 0 && y < canvas.height) {
+//                 ctx.beginPath();
+//                 ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+//                 ctx.arc(x, y, radius, 0, Math.PI * 2);
+//                 ctx.fill();
+//             }
+//         }
+//     }
+//     for (let i = 0; i < numStars; i++) stars.push(new Star());
+//     function animateWarp() {
+//         ctx.fillStyle = "rgba(2, 6, 23, 0.4)";
+//         ctx.fillRect(0, 0, canvas.width, canvas.height);
+//         stars.forEach(star => { star.update(); star.draw(); });
+//         requestAnimationFrame(animateWarp);
+//     }
+//     animateWarp();
+// }
+
+// /* =========================================
+//    3. AUTHENTICATION LOGIC (PRESERVED)
+//    ========================================= */
+// document.addEventListener('DOMContentLoaded', () => {
+//     auth.onAuthStateChanged((user) => {
+//         const userAvatar = document.getElementById('userAvatar');
+//         const userName = document.getElementById('dropdownUserName');
+//         const profileBtn = document.getElementById('profileBtn');
+//         if (user) {
+//             let finalName = user.displayName || user.email.split('@')[0] || "Authorized User";
+//             if (userName) userName.innerText = finalName.toUpperCase();
+//             if (userAvatar) {
+//                 if (user.photoURL) userAvatar.src = user.photoURL;
+//                 else {
+//                     const initials = finalName.substring(0, 2).toUpperCase();
+//                     userAvatar.src = `https://ui-avatars.com/api/?name=${initials}&background=db2777&color=fff&bold=true`;
+//                 }
+//             }
+//             if (profileBtn) profileBtn.style.borderColor = "#db2777";
+//         }
+//     });
+//     updateSidebarHistory();
+// });
+// window.logout = function() {
+//     auth.signOut().then(() => { window.location.href = "third/authentication.html"; }).catch((error) => console.error(error));
+// };
+
+// /* =========================================
+//    4. CORE LOGIC (HISTORY + AUDIO + EMOTIONS)
+//    ========================================= */
+// const SCANNER_API = "http://127.0.0.1:8000/analyze"; 
+// const BRAIN_API = "http://127.0.0.1:5000/chat";      
+
+// let currentFile = null;
+// let isListening = false;
+// let isVoiceInteraction = false;
+// let isScanning = false;
+// let botAudioPlayer = null;
+
+// // 🔊 SOUND EFFECTS
+// const sfx = {
+//     mic: new Audio('sounds/ui_chirp.mp3'),
+//     scan: new Audio('sounds/ui_scan.mp3'),
+//     success: new Audio('sounds/ui_success.mp3'),
+//     alert: new Audio('sounds/ui_alert.mp3')
+// };
+// function playSound(name) {
+//     if(sfx[name]) {
+//         sfx[name].volume = 0.4;
+//         sfx[name].currentTime = 0;
+//         sfx[name].play().catch(() => {});
+//     }
+// }
+
+// // 🟢 HISTORY
+// function saveToHistory(text, type) {
+//     if (!text || text.includes("System Busy") || text.includes("Processing")) return;
+//     const historyItem = { 
+//         text: text.substring(0, 40) + (text.length > 40 ? "..." : ""), 
+//         date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), 
+//         type: type 
+//     };
+//     let history = JSON.parse(localStorage.getItem('medibot_history') || "[]");
+//     history.unshift(historyItem);
+//     if(history.length > 10) history.pop();
+//     localStorage.setItem('medibot_history', JSON.stringify(history));
+//     updateSidebarHistory();
+// }
+
+// function updateSidebarHistory() {
+//     const list = document.getElementById('historyList');
+//     if(!list) return;
+//     const history = JSON.parse(localStorage.getItem('medibot_history') || "[]");
+//     if (history.length === 0) {
+//         list.innerHTML = `<div class="text-[9px] text-slate-600 text-center italic mt-2">No recent scans</div>`;
+//         return;
+//     }
+//     list.innerHTML = history.map(h => `
+//         <div class="p-2 rounded bg-white/5 border border-white/5 text-[10px] text-slate-400 hover:bg-white/10 cursor-pointer transition-colors group">
+//             <div class="flex justify-between mb-1">
+//                 <span class="${h.type === 'scan' ? 'text-cyan-400' : 'text-pink-400'} font-bold font-orbitron text-[9px]">${h.type.toUpperCase()}</span> 
+//                 <span class="opacity-50">${h.date}</span>
+//             </div>
+//             <div class="truncate group-hover:text-white transition-colors">${h.text}</div>
+//         </div>
+//     `).join('');
+// }
+
+// // 🟢 VOICE STOPPER
+// window.addEventListener('beforeunload', () => { stopSpeaking(); });
+
+// function stopSpeaking() {
+//     if (botAudioPlayer) {
+//         botAudioPlayer.pause();
+//         botAudioPlayer.currentTime = 0;
+//     }
+//     const statusText = document.getElementById('statusText');
+//     if (statusText && statusText.innerText === "SPEAKING") {
+//         setMode('neutral');
+//     }
+// }
+
+// document.addEventListener('mousemove', (e) => {
+//     const leftPupil = document.getElementById('pupilLeft');
+//     const rightPupil = document.getElementById('pupilRight');
+//     if(!leftPupil) return;
+//     const cx = window.innerWidth / 2;
+//     const cy = window.innerHeight / 2;
+//     const dx = e.clientX - cx;
+//     const dy = e.clientY - cy;
+//     const angle = Math.atan2(dy, dx);
+//     const distance = Math.min(Math.sqrt(dx*dx + dy*dy) / 25, 4);
+//     const moveX = Math.cos(angle) * distance;
+//     const moveY = Math.sin(angle) * distance;
+//     leftPupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
+//     rightPupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
+// });
+
+// /* =========================================
+//    5. EMOTION ANIMATION LOGIC (RESTORED)
+//    ========================================= */ 
+// function resetVoiceMode() { 
+//     stopSpeaking();
+//     isVoiceInteraction = false; 
+// }
+
+// function toggleListening() { if (!isListening) startVoiceInput(); }
+
+// function startVoiceInput() {
+//     stopSpeaking();
+//     playSound('mic');
+    
+//     const micBtn = document.getElementById('micBtn');
+//     const chatInput = document.getElementById('chatInput');
+//     if ('webkitSpeechRecognition' in window) {
+//         const recognition = new webkitSpeechRecognition();
+//         recognition.lang = 'en-US';
+        
+//         setMode('listening');
+//         isListening = true;
+//         isVoiceInteraction = true; 
+        
+//         micBtn.classList.add('text-cyan-400', 'bg-cyan-400/10');
+//         chatInput.placeholder = "Listening...";
+        
+//         recognition.onresult = (event) => {
+//             const transcript = event.results[0][0].transcript;
+//             chatInput.value = transcript;
+//         };
+        
+//         recognition.onend = () => {
+//             setMode('neutral');
+//             isListening = false;
+//             micBtn.classList.remove('text-cyan-400', 'bg-cyan-400/10');
+//             chatInput.placeholder = "Describe symptoms...";
+//             sendMessage();
+//         };
+//         recognition.start();
+//     } else {
+//         alert("Voice not supported.");
+//     }
+// }
+
+// function playBackendAudio(base64Audio) {
+//     stopSpeaking(); 
+//     if (base64Audio && isVoiceInteraction) {
+//         botAudioPlayer = new Audio("data:audio/mp3;base64," + base64Audio);
+//         botAudioPlayer.onplay = () => { setMode('talking'); };
+//         botAudioPlayer.onended = () => { setMode('neutral'); };
+//         botAudioPlayer.play().catch(e => console.error("Audio Error:", e));
+//     }
+// }
+
+// // ============================================
+// // 🟢 MAIN FUNCTION
+// // ============================================
+// async function sendMessage() {
+//     stopSpeaking();
+
+//     if(currentFile && isScanning) {
+//         addBotMessage("⚠️ System Busy: Uploading image...", "system");
+//         return; 
+//     }
+
+//     const textInput = document.getElementById('chatInput');
+//     const text = textInput.value.trim();
+    
+//     if (!text && !currentFile) {
+//         textInput.placeholder = "⚠️ Please enter data...";
+//         setTimeout(() => textInput.placeholder = "Enter symptoms...", 1500);
+//         return;
+//     }
+
+//     addUserMessage(text, currentFile);
+    
+//     const fileToUpload = currentFile;
+//     const isCameraScan = fileToUpload && fileToUpload.name.startsWith("scan_");
+    
+//     textInput.value = '';
+//     clearFile();
+//     setMode('processing'); // 🟢 TRIGGERS ANIMATIONS
+//     playSound('scan');
+
+//     try {
+//         const userId = "user_" + Math.floor(Math.random() * 10000);
+
+//         // --- CASE A: CAMERA SCAN ---
+//         if (isCameraScan) {
+//             addBotMessage("🧠 Processing live feed with MediBot Brain...", "system", false);
+//             isVoiceInteraction = false; 
+
+//             const formData = new FormData();
+//             formData.append("file", fileToUpload);
+//             formData.append("user_id", userId);
+            
+//             const response = await fetch(BRAIN_API, { method: 'POST', body: formData });
+//             if (!response.ok) throw new Error("Brain Backend Offline");
+            
+//             const data = await response.json();
+            
+//             const lowerRes = data.response.toLowerCase();
+//             let resultMode = 'happy';
+//             if (lowerRes.includes('critical') || lowerRes.includes('severe') || lowerRes.includes('emergency')) {
+//                 resultMode = 'danger'; playSound('alert');
+//             } else if (lowerRes.includes('moderate') || lowerRes.includes('consult')) {
+//                 resultMode = 'caution';
+//             } else {
+//                 playSound('success');
+//             }
+
+//             addBotMessage(data.response, "normal", true, data.report_url);
+//             setMode(resultMode);
+//             setTimeout(() => { if(!isVoiceInteraction) setMode('neutral'); }, 5000);
+//         }
+
+//         // --- CASE B: FILE UPLOAD ---
+//         else if (fileToUpload) {
+//             isVoiceInteraction = false; 
+//             addBotMessage("🔍 Scanning document... Consulting Vision Engine...", "system", false);
+            
+//             const formData = new FormData();
+//             formData.append("file", fileToUpload);
+
+//             const response = await fetch(SCANNER_API, { method: 'POST', body: formData });
+//             if (!response.ok) throw new Error("Scanner Backend Offline");
+            
+//             const data = await response.json();
+            
+//             // 🟢 DISPLAY FULL RICH CARD (Heatmap + Table)
+//             addDiagnosticMessage(data);
+            
+//             if (data.severity_score >= 4) { setMode('danger'); playSound('alert'); } 
+//             else if (data.severity_score === 3) { setMode('caution'); } 
+//             else { setMode('happy'); playSound('success'); }
+            
+//             setTimeout(() => { setMode('neutral'); }, 4000);
+//             saveToHistory(`File Scan: ${data.verdict || "Analysis"}`, 'scan');
+
+//             // Memory Sync
+//             const syncText = `Scan Result: ${data.verdict}. Summary: ${data.summary}`;
+//             fetch(BRAIN_API, {
+//                 method: 'POST',
+//                 headers: { 'Content-Type': 'application/json' },
+//                 body: JSON.stringify({ user_id: userId, message: syncText, sync_only: true })
+//             }).catch(e => console.log("Memory Sync Error:", e));
+//         }
+
+//         // --- CASE C: TEXT CHAT ---
+//         else {
+//             const response = await fetch(BRAIN_API, {
+//                 method: 'POST',
+//                 headers: { 'Content-Type': 'application/json' },
+//                 body: JSON.stringify({ user_id: userId, message: text })
+//             });
+
+//             if (!response.ok) throw new Error("Brain Backend Offline");
+            
+//             const data = await response.json();
+            
+//             playSound('success');
+//             addBotMessage(data.response, "normal", true);
+//             playBackendAudio(data.audio);
+//         }
+
+//     } catch (error) {
+//         console.error(error);
+//         setMode('neutral');
+//         addBotMessage(`❌ CONNECTION ERROR: ${error.message}`, "error", false);
+//     }
+// }
+
+// // 🟢 RICH DIAGNOSTIC CARD (RESTORED HEATMAP + TABLE)
+// function addDiagnosticMessage(data) {
+//     const messagesDiv = document.getElementById('messages');
+//     const msgWrapper = document.createElement('div');
+//     msgWrapper.className = "flex justify-start animate-fade-in-up mb-6 w-full"; 
+
+//     const severity = data.severity_score || 0;
+//     let borderColor = "border-green-500/50";
+//     let titleColor = "text-green-400";
+//     let badgeBg = "bg-green-500/20 text-green-400 border-green-500/30";
+    
+//     if (severity >= 4) { borderColor = "border-red-500/50"; titleColor = "text-red-500"; badgeBg = "bg-red-500/20 text-red-400 border-red-500/30"; }
+//     else if (severity === 3) { borderColor = "border-orange-500/50"; titleColor = "text-orange-400"; badgeBg = "bg-orange-500/20 text-orange-400 border-orange-500/30"; }
+//     else if (severity === 2) { borderColor = "border-yellow-500/50"; titleColor = "text-yellow-400"; badgeBg = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"; }
+
+//     let confidenceVal = "N/A";
+//     let modalityVal = "General";
+//     if (data.report_data) {
+//         const confItem = data.report_data.find(i => i.label.includes("Confidence"));
+//         if (confItem) confidenceVal = confItem.value;
+//         const modItem = data.report_data.find(i => i.label.includes("Modality"));
+//         if (modItem) modalityVal = modItem.value;
+//     }
+//     const numConf = parseFloat(confidenceVal.replace("%", "")) || 0;
+//     const confBarColor = numConf > 80 ? "bg-green-500" : (numConf > 50 ? "bg-yellow-500" : "bg-red-500");
+
+//     let htmlContent = `
+//         <div class="glass-panel ${borderColor} text-white rounded-xl p-4 w-full md:max-w-[600px] shadow-2xl bg-[#0a0f1e]/90">
+//             <div class="flex justify-between items-start mb-4 border-b border-white/10 pb-2">
+//                 <div>
+//                     <div class="text-[10px] text-slate-500 font-bold tracking-widest font-orbitron mb-1">DIAGNOSTIC RESULT</div>
+//                     <div class="font-orbitron font-bold text-xl md:text-2xl ${titleColor}">${data.verdict || "ANALYSIS COMPLETE"}</div>
+//                 </div>
+//                 <div class="px-3 py-1 rounded font-bold text-xs border ${badgeBg} font-orbitron">TIER ${severity}/4</div>
+//             </div>
+//             <div class="flex flex-col md:flex-row gap-4">`;
+
+//     // 🟢 1. HEATMAP SECTION
+//     if (data.heatmap_url) {
+//         htmlContent += `
+//             <div class="w-full md:w-1/3 flex flex-col gap-2">
+//                 <div class="relative group rounded-lg overflow-hidden border border-white/20 h-40 bg-black">
+//                     <img src="${data.heatmap_url}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity">
+//                     <div class="absolute bottom-0 left-0 bg-black/80 w-full px-2 py-1 text-[9px] text-cyan-400 font-orbitron text-center border-t border-cyan-500/30">AI ATTENTION MAP</div>
+//                 </div>
+//                 <div class="bg-white/5 p-2 rounded border border-white/10">
+//                     <div class="flex justify-between text-[10px] text-slate-400 mb-1 font-orbitron"><span>CONFIDENCE</span><span>${confidenceVal}</span></div>
+//                     <div class="w-full bg-black/50 rounded-full h-1.5"><div class="${confBarColor} h-1.5 rounded-full" style="width: ${numConf}%"></div></div>
+//                 </div>
+//             </div>`;
+//     }
+
+//     htmlContent += `<div class="flex-1 flex flex-col gap-3">`;
+    
+//     // 🟢 2. TABLE SECTION
+//     if (data.report_data && data.report_data.length > 0) {
+//         htmlContent += `<div class="bg-white/5 rounded-lg border border-white/10 overflow-hidden"><table class="w-full text-xs text-left text-slate-300">
+//             <thead class="bg-black/40 text-slate-500 font-orbitron"><tr><th class="px-3 py-2">FINDING</th><th class="px-3 py-2">VALUE</th><th class="px-3 py-2">STATUS</th></tr></thead>
+//             <tbody class="divide-y divide-white/5">`;
+//         data.report_data.forEach(item => {
+//             if (item.label.includes("Confidence") || item.label.includes("Modality")) return;
+//             let statusColor = item.is_abnormal ? "text-red-400 font-bold" : "text-green-400";
+//             htmlContent += `<tr><td class="px-3 py-2">${item.label}</td><td class="px-3 py-2 font-mono text-slate-200">${item.value}</td><td class="px-3 py-2 ${statusColor}">${item.status}</td></tr>`;
+//         });
+//         htmlContent += `</tbody></table></div>`;
+//     } else {
+//         htmlContent += `<p class="text-sm text-slate-400 italic bg-white/5 p-3 rounded border border-white/10">${data.summary}</p>`;
+//     }
+    
+//     htmlContent += `<div class="flex justify-between text-[10px] text-slate-500 uppercase tracking-widest px-1"><span>MODALITY: <span class="text-cyan-400">${modalityVal}</span></span><span>MODEL: <span class="text-pink-400">BIOMED-CLIP</span></span></div></div></div>`;
+    
+//     // 🟢 3. DOWNLOAD BUTTONS
+//     htmlContent += `<div class="mt-4 pt-3 border-t border-white/10 flex flex-col gap-2">`;
+    
+//     if (data.report_url) { // Official PDF from Backend 2 (Scan Sync)
+//          htmlContent += `<a href="${data.report_url}" target="_blank" class="block w-full text-center bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold py-2 rounded-lg text-xs font-orbitron transition-all shadow-lg hover:shadow-cyan-500/20"><i class="fas fa-file-pdf mr-2"></i>DOWNLOAD OFFICIAL REPORT</a>`;
+//     }
+    
+//     htmlContent += `<div class="flex items-center justify-center gap-1 text-[9px] text-slate-600 mt-1"><i class="fas fa-shield-alt"></i><span>AI-Generated Analysis. Verify with a licensed physician.</span></div></div></div>`;
+
+//     msgWrapper.innerHTML = htmlContent;
+//     messagesDiv.appendChild(msgWrapper);
+//     messagesDiv.scrollTop = messagesDiv.scrollHeight;
+// }
+
+// // 🟢 HELPER: ADD USER MESSAGE
+// function addUserMessage(text, file) {
+//     const messagesDiv = document.getElementById('messages');
+//     const msgWrapper = document.createElement('div');
+//     msgWrapper.className = "flex justify-end animate-fade-in-up mb-3";
+//     let content = "";
+//     if (file) {
+//         const previewImg = document.querySelector('#previewContent img');
+//         if (previewImg) content += `<img src="${previewImg.src}" class="w-full h-32 object-cover rounded-md opacity-90 border border-white/20 mb-2">`;
+//         else content += `<div class="flex items-center gap-2 bg-white/10 p-2 rounded mb-2 text-xs"><i class="fas fa-file-image"></i> ${file.name}</div>`;
+//     }
+//     if (text) content += `<p class="text-sm font-rajdhani text-white">${text}</p>`;
+//     msgWrapper.innerHTML = `<div class="bg-gradient-to-r from-pink-500 to-blue-500 p-[1px] rounded-xl shadow-lg max-w-[85%]"><div class="bg-[#0a0f1e] rounded-[11px] p-3 text-white">${content}</div></div>`;
+//     messagesDiv.appendChild(msgWrapper);
+//     messagesDiv.scrollTop = messagesDiv.scrollHeight;
+// }
+
+// // 🟢 HELPER: ADD BOT MESSAGE (WITH PDF & TYPEWRITER)
+// function addBotMessage(text, type="normal", useTypewriter=false, reportUrl=null) {
+//     const messagesDiv = document.getElementById('messages');
+//     const msgWrapper = document.createElement('div');
+//     msgWrapper.className = "flex justify-start animate-fade-in-up mb-3 w-full"; 
+    
+//     let border = type === "error" ? "border-red-500/50" : "border-cyan-400/30";
+//     let textCol = type === "error" ? "text-red-300" : "text-slate-200";
+    
+//     let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-cyan-400 font-bold">$1</strong>').replace(/\n/g, '<br>');
+
+//     let pdfButton = "";
+//     if (reportUrl) {
+//         pdfButton = `
+//         <div class="mt-3 pt-3 border-t border-white/10">
+//             <a href="${reportUrl}" target="_blank" class="flex items-center justify-center gap-2 w-full py-2 bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/50 rounded text-xs font-orbitron transition-all">
+//                 <i class="fas fa-file-pdf"></i> DOWNLOAD OFFICIAL REPORT
+//             </a>
+//         </div>`;
+//     }
+
+//     msgWrapper.innerHTML = `
+//         <div class="glass-panel ${border} p-4 rounded-xl rounded-tl-sm max-w-[90%] md:max-w-[80%] shadow-[0_0_15px_rgba(6,182,212,0.1)]">
+//             <div class="flex items-center gap-2 mb-2 border-b border-white/10 pb-2">
+//                 <i class="fas fa-microchip text-cyan-400 text-xs"></i>
+//                 <span class="text-[10px] text-cyan-400 font-orbitron tracking-widest opacity-80">MEDIBOT CORE</span>
+//             </div>
+//             <div class="bot-text-content text-[14px] leading-relaxed font-rajdhani ${textCol}"></div>
+//             ${pdfButton}
+//         </div>`;
+    
+//     messagesDiv.appendChild(msgWrapper);
+//     const contentDiv = msgWrapper.querySelector('.bot-text-content');
+
+//     if (useTypewriter) {
+//         let i = 0;
+//         function typeLoop() {
+//             if (i < formattedText.length) {
+//                 if (formattedText[i] === '<') {
+//                     let tagEnd = formattedText.indexOf('>', i);
+//                     if (tagEnd !== -1) { contentDiv.innerHTML += formattedText.substring(i, tagEnd + 1); i = tagEnd + 1; } 
+//                     else { contentDiv.innerHTML += formattedText[i]; i++; }
+//                 } else { contentDiv.innerHTML += formattedText[i]; i++; }
+//                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
+//                 setTimeout(typeLoop, 10);
+//             }
+//         }
+//         typeLoop();
+//     } else {
+//         contentDiv.innerHTML = formattedText;
+//     }
+//     messagesDiv.scrollTop = messagesDiv.scrollHeight;
+//     if(type !== "system") saveToHistory(text, reportUrl ? 'scan' : 'chat');
+// }
+
+// // 🟢 HANDLERS
+// function handleFileSelect(input) {
+//     if (input.files && input.files[0]) {
+//         stopSpeaking(); 
+//         isVoiceInteraction = false; 
+//         currentFile = input.files[0];
+//         isScanning = true; 
+//         const preview = document.getElementById('filePreview');
+//         const contentBox = document.getElementById('previewContent');
+//         const fileName = document.getElementById('previewFileName');
+//         const scanBar = document.getElementById('scanBar');
+//         preview.classList.remove('hidden');
+//         fileName.textContent = currentFile.name;
+//         scanBar.classList.add('animate-scan-bar');
+//         scanBar.style.width = ''; scanBar.style.opacity = ''; scanBar.classList.replace('bg-green-500', 'bg-cyan-400');
+//         if (currentFile.type.startsWith('image/')) {
+//             const reader = new FileReader();
+//             reader.onload = (e) => contentBox.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover rounded-md opacity-90">`;
+//             reader.readAsDataURL(currentFile);
+//         } else {
+//             contentBox.innerHTML = `<div class="doc-page w-full h-full rounded flex items-center justify-center bg-white border-t-4 border-gray-500"><i class="fas fa-file-alt text-gray-500 text-lg"></i></div>`;
+//         }
+//         playSound('scan');
+//         setTimeout(() => {
+//             scanBar.classList.remove('animate-scan-bar');
+//             scanBar.style.width = '100%'; scanBar.style.opacity = '1'; scanBar.classList.replace('bg-cyan-400', 'bg-green-500');
+//             isScanning = false; 
+//         }, 1000);
+//     }
+// }
+
+// function clearFile() {
+//     currentFile = null;
+//     isScanning = false;
+//     document.getElementById('fileInput').value = '';
+//     document.getElementById('filePreview').classList.add('hidden');
+// }
+
+// function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); document.getElementById('sidebarOverlay').classList.toggle('hidden'); }
+// function toggleProfile() { document.getElementById('profileDropdown').classList.toggle('hidden'); }
+
+// let videoStream = null;
+// async function startCamera() {
+//     stopSpeaking(); 
+//     try {
+//         const video = document.getElementById('videoFeed');
+//         const modal = document.getElementById('cameraModal');
+//         videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+//         video.srcObject = videoStream;
+//         modal.classList.remove('hidden');
+//         modal.classList.add('flex');
+//     } catch (err) { alert("Could not access camera: " + err); }
+// }
+
+// function closeCamera() {
+//     const modal = document.getElementById('cameraModal');
+//     modal.classList.add('hidden');
+//     modal.classList.remove('flex');
+//     if (videoStream) { videoStream.getTracks().forEach(track => track.stop()); videoStream = null; }
+// }
+
+// function capturePhoto() {
+//     const video = document.getElementById('videoFeed');
+//     const canvas = document.createElement('canvas');
+//     canvas.width = video.videoWidth;
+//     canvas.height = video.videoHeight;
+//     const ctx = canvas.getContext('2d');
+//     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+//     canvas.toBlob(blob => {
+//         const file = new File([blob], "scan_" + Date.now() + ".jpg", { type: "image/jpeg" });
+//         currentFile = file;
+//         const preview = document.getElementById('filePreview');
+//         const contentBox = document.getElementById('previewContent');
+//         const fileName = document.getElementById('previewFileName');
+//         preview.classList.remove('hidden');
+//         fileName.textContent = currentFile.name;
+//         contentBox.innerHTML = `<img src="${URL.createObjectURL(currentFile)}" class="w-full h-full object-cover rounded-md opacity-90">`;
+//         closeCamera();
+//         sendMessage();
+//     }, 'image/jpeg');
+// }

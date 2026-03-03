@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing and Logs
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment and Config
+.env
+.env.local
+.vscode/
+
+# OS specific
+.DS_Store
+Thumbs.db
