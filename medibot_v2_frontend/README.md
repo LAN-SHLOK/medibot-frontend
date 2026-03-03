@@ -4,6 +4,7 @@
 ![JavaScript](https://img.shields.io/badge/Vanilla_JS-F7DF1E?style=flat&logo=javascript&logoColor=black)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)
 ![WebAudioAPI](https://img.shields.io/badge/Web_Audio-API-blueviolet)
+![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)
 
 This repository holds the highly dynamic, zero-build-step client interface for Medibot V2. Engineered entirely in Vanilla Javascript and styled utilizing TailwindCSS, it provides a seamless, immersive, and highly animated user experience.
 

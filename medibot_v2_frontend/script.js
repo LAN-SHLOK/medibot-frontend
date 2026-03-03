@@ -16,13 +16,13 @@ setInterval(() => {
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDPEywFgii0vVWl-xt8qZve9pOqHUxsbeQ",
-    authDomain: "medibot-73b45.firebaseapp.com",
-    projectId: "medibot-73b45",
-    storageBucket: "medibot-73b45.firebasestorage.app",
-    messagingSenderId: "385608781776",
-    appId: "1:385608781776:web:9c9588d8d3f9029cb6b3d5",
-    measurementId: "G-7K9JLKZNT9"
+    apiKey: typeof window.CONFIG !== 'undefined' && window.CONFIG.FIREBASE_API_KEY ? window.CONFIG.FIREBASE_API_KEY : "YOUR_API_KEY",
+    authDomain: typeof window.CONFIG !== 'undefined' && window.CONFIG.FIREBASE_AUTH_DOMAIN ? window.CONFIG.FIREBASE_AUTH_DOMAIN : "YOUR_AUTH_DOMAIN",
+    projectId: typeof window.CONFIG !== 'undefined' && window.CONFIG.FIREBASE_PROJECT_ID ? window.CONFIG.FIREBASE_PROJECT_ID : "YOUR_PROJECT_ID",
+    storageBucket: typeof window.CONFIG !== 'undefined' && window.CONFIG.FIREBASE_STORAGE_BUCKET ? window.CONFIG.FIREBASE_STORAGE_BUCKET : "YOUR_STORAGE_BUCKET",
+    messagingSenderId: typeof window.CONFIG !== 'undefined' && window.CONFIG.FIREBASE_MESSAGING_SENDER_ID ? window.CONFIG.FIREBASE_MESSAGING_SENDER_ID : "YOUR_SENDER_ID",
+    appId: typeof window.CONFIG !== 'undefined' && window.CONFIG.FIREBASE_APP_ID ? window.CONFIG.FIREBASE_APP_ID : "YOUR_APP_ID",
+    measurementId: typeof window.CONFIG !== 'undefined' && window.CONFIG.FIREBASE_MEASUREMENT_ID ? window.CONFIG.FIREBASE_MEASUREMENT_ID : "YOUR_MEASUREMENT_ID"
 };
 
 if (typeof firebase !== 'undefined' && !firebase.apps.length) {
